@@ -9,8 +9,16 @@
 #   python3 -m venv .venv && .venv/bin/pip install "fonttools[woff]" brotli
 #
 # Source: Literata variable (SIL OFL 1.1) from github.com/google/fonts.
-# The opsz (7-72) and wght axes MUST survive subsetting — optical sizing is
-# what makes one family work at caption and display sizes (design brief §6.1).
+# The opsz (7-72) and wght axes MUST survive subsetting (design brief §6.1).
+#
+# What opsz actually buys, measured rather than assumed: §6.1 justifies it as
+# the thing that makes small text work in a serif. That reasoning is wrong. The
+# alternative to keeping the axis is pinning it at a text size (~14) — which IS
+# the caption drawing, so metadata and captions render identically either way.
+# What the axis buys is the *display* end: at h1 size the interpolated drawing
+# is finer and tighter, where a pinned-at-14 drawing is visibly heavier and
+# wider. On a monochrome site with no imagery, headings are the design, so the
+# axis earns its cost there — and only there. Don't keep it "for the captions".
 #
 # Sizing note: opsz is the expensive axis (~52 KB/face). Keeping it across a
 # Latin-1 charset costs ~200 KB for both faces, well over the 140 KB budget
