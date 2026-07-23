@@ -1,0 +1,558 @@
+/*
+ * morning club — the whole design system, ~one screen of decisions.
+ *
+ * Monochrome by construction (§6.2): there is no hue anywhere, so hierarchy has
+ * to come from size, weight and space alone. That constraint is the reason the
+ * page holds together — nothing can shout, so nothing competes.
+ *
+ * One family, Literata, at every size. The opsz axis is doing quiet work here:
+ * the same font redraws itself sturdier and looser at caption sizes and finer
+ * at display sizes, which is why metadata in a serif doesn't feel like a
+ * compromise. Zero JavaScript is a hard requirement (NFR-1), and every rule
+ * below is compatible with that by construction.
+ */
+
+/* ---------------------------------------------------------------- tokens -- */
+
+:root {
+  /* Neither extreme is pure: #FFF glares, #000 halates. Both are pulled in. */
+  --ground: #fafafa;
+  --ink: #1c1c1c;
+  --muted: #6b6b6b;
+  --rule: #e8e8e8;
+
+  --body-weight: 400;
+
+  /* ×1.2 minor third, everything in rem off a 20px root. */
+  --step--2: 0.694rem;
+  --step--1: 0.833rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.44rem;
+  --step-3: 1.73rem;
+  --step-4: 2.07rem;
+
+  /*
+   * The text column, in rem rather than ch on purpose. `ch` measures the "0"
+   * advance, which `tabular-nums` inflates well past the average prose
+   * character — 66ch renders as ~85 characters here, far outside the 60-70
+   * that actually reads well. rem is also immune to the fallback font's
+   * metrics, so the column doesn't reflow when Literata finishes loading.
+   * 29rem ≈ 64 characters of Literata at both root sizes.
+   */
+  --measure: 29rem;
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+
+  --font-body: var(--font-literata), Charter, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #161616;
+    --ink: #dedede;
+    --muted: #9c9c9c;
+    --rule: #2a2a2a;
+    /* Light-on-dark renders optically thinner; nudge the body weight back. */
+    --body-weight: 425;
+  }
+}
+
+/* ------------------------------------------------------------- structure -- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18px;
+  background: var(--ground);
+  /* The .dev TLD is HSTS-preloaded, so this is always a secure context. */
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (min-width: 46rem) {
+  html {
+    font-size: 20px;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  font-weight: var(--body-weight);
+  line-height: 1.65;
+  /* The mechanism that makes one family work from caption to title (§6.1). */
+  font-optical-sizing: auto;
+  font-variant-numeric: tabular-nums;
+  text-rendering: optimizeLegibility;
+}
+
+.shell {
+  /* Padding sits outside the measure, so the text column is exactly --measure. */
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  /* Generous top whitespace — the page should open, not start. */
+  padding-block: clamp(3rem, 10vh, 6rem) 4rem;
+}
+
+/* ------------------------------------------------------------ typography -- */
+
+h1,
+h2,
+h3,
+h4 {
+  /* Graded weights, never heavy bold: a monochrome page shouts at 700+. */
+  text-wrap: balance;
+  margin: 2.2em 0 0.6em;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: var(--step-4);
+  font-weight: 560;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin-block: 0 0.4em;
+}
+
+h2 {
+  font-size: var(--step-3);
+  font-weight: 540;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--step-2);
+  font-weight: 520;
+  line-height: 1.35;
+}
+
+h4 {
+  font-size: var(--step-1);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+p,
+ul,
+ol,
+blockquote,
+pre,
+table {
+  margin-block: 0 1.15em;
+}
+
+/* Emphasis in body text is italic, not bold (§6.1). */
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: 560;
+}
+
+small,
+.caption {
+  font-size: var(--step--1);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+.label {
+  font-size: var(--step--2);
+  font-weight: 480;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------------- links -- */
+
+/*
+ * The underline is the entire link affordance — there is no link colour,
+ * because there is no colour. Resting underlines sit at --muted so a
+ * link-dense paragraph doesn't turn into a fence.
+ */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--muted);
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.15em;
+  transition: text-decoration-color 120ms ease;
+}
+
+a:hover {
+  text-decoration-color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+/* --------------------------------------------------------------- content -- */
+
+blockquote {
+  margin-inline: 0;
+  padding-left: 1.2em;
+  border-left: 1px solid var(--rule);
+  color: var(--muted);
+  font-style: italic;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1em 1.1em;
+  border: 1px solid var(--rule);
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+
+pre code {
+  font-size: inherit;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin-block: 2.5em;
+}
+
+ul,
+ol {
+  padding-left: 1.3em;
+}
+
+li {
+  margin-block: 0.35em;
+}
+
+li::marker {
+  color: var(--muted);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5em 0.8em 0.5em 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+th {
+  font-weight: 520;
+}
+
+/* Images sit on the text grid: no border, no shadow, no rounding. */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-block: 2em;
+}
+
+/*
+ * An italic paragraph immediately after an image is its caption. Pure CSS, so
+ * the markdown source stays plain: `![alt](/images/x.png)` then `*caption*`.
+ */
+p:has(> img:only-child) + p:has(> em:only-child) {
+  margin-top: -1.4em;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+p:has(> img:only-child) + p:has(> em:only-child) em {
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------ apparatus -- */
+
+/* Stage chip: the fill-state dot beside a lowercase word. Colourblind-proof
+   by construction — the signal is fill, not hue (§6.2). */
+.stage {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  font-size: var(--step--1);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.stage::before {
+  content: '';
+  display: inline-block;
+  inline-size: 0.62em;
+  block-size: 0.62em;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  /* Sit the dot on the text baseline rather than the line box. */
+  transform: translateY(0.02em);
+}
+
+.stage[data-stage='budding']::before {
+  background: linear-gradient(to right, currentColor 50%, transparent 50%);
+}
+
+.stage[data-stage='evergreen']::before {
+  background: currentColor;
+}
+
+/* The article's meta line: stage · planted · tended · history. */
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em 0.9em;
+  margin-block: 1.4em 0;
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.meta a {
+  color: var(--muted);
+}
+
+.meta a:hover {
+  color: var(--ink);
+}
+
+.standfirst {
+  margin-block: 0.5em 0;
+  font-size: var(--step-1);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin-block: 1.6em 2.6em;
+}
+
+/* ---------------------------------------------------------------- index -- */
+
+/* A table of contents, not a card grid. */
+.toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc > li {
+  margin: 0;
+  padding-block: 1.4em;
+  border-bottom: 1px solid var(--rule);
+}
+
+.toc > li:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+.toc-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.3em 1em;
+}
+
+.toc-title {
+  font-size: var(--step-1);
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.toc-date {
+  font-size: var(--step--1);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.toc-desc {
+  margin: 0.35em 0 0;
+  color: var(--muted);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.toc-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 1em;
+  align-items: baseline;
+  margin-top: 0.5em;
+}
+
+/* ----------------------------------------------- changelog and backlinks -- */
+
+.apparatus {
+  margin-top: 4rem;
+}
+
+.apparatus > h2 {
+  font-size: var(--step-0);
+  font-weight: 480;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-block: 0 1.2em;
+}
+
+.changelog {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.changelog > li {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0 1.2em;
+  margin-block: 0 1.1em;
+}
+
+.changelog time {
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+
+.changelog p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.changelog .stage {
+  display: flex;
+  margin-top: 0.3em;
+}
+
+@media (max-width: 34rem) {
+  .changelog > li {
+    grid-template-columns: 1fr;
+    gap: 0.2em;
+  }
+}
+
+.backlinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.backlinks > li {
+  margin-block: 0 1em;
+}
+
+.backlinks a {
+  text-wrap: pretty;
+}
+
+.backlinks p {
+  margin: 0.2em 0 0;
+  font-size: var(--step--1);
+  color: var(--muted);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------- site furniture -- */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1em;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 3.5rem;
+}
+
+.masthead a {
+  text-decoration: none;
+}
+
+.masthead a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--ink);
+}
+
+.sitename {
+  font-size: var(--step-0);
+  font-weight: 520;
+  letter-spacing: -0.005em;
+}
+
+.colophon {
+  margin-top: 5rem;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--rule);
+  font-size: var(--step--1);
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.2em;
+}
+
+.colophon a {
+  color: var(--muted);
+}
+
+.colophon a:hover {
+  color: var(--ink);
+}
+
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.5;
+  text-wrap: pretty;
+  margin-bottom: 2.5rem;
+}
+
+/* Skip link: present for keyboard users, out of the way for everyone else. */
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip:focus {
+  left: var(--gutter);
+  top: 0.6rem;
+  z-index: 1;
+  padding: 0.4em 0.7em;
+  background: var(--ground);
+  outline: 2px solid var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

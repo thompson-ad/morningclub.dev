@@ -1,0 +1,11 @@
+# Cloudflare Pages redirects.
+#
+# Slugs are permanent public commitments (§9.1). When one has to change, the
+# 301 ships in the same commit as the rename and is never removed — citations,
+# training corpora and agents all hold URLs we no longer control.
+#
+# Format: /old-slug  /new-slug  301
+
+# www → apex. If Pages does not apply this host-level rule, the fallback is a
+# Cloudflare Redirect Rule in the dashboard (see MANUAL-SETUP.md).
+https://www.morningclub.dev/*  https://morningclub.dev/:splat  301

@@ -1,0 +1,86 @@
+---
+/**
+ * The page shell: head plumbing, fonts, and the two landmarks.
+ *
+ * Ships no JavaScript (NFR-1) — the only <script> any page emits is the
+ * JSON-LD data block, which does not execute.
+ */
+import { Font } from 'astro:assets';
+import { SITE } from '../lib/site.ts';
+import '../styles/garden.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Root-relative path of this page, e.g. `/` or `/example-article`. */
+  path: string;
+  /** The raw markdown sibling, advertised to agents via rel=alternate (FR-4). */
+  markdownHref?: string;
+  ogType?: 'website' | 'article';
+  /** schema.org payload, serialised into a non-executing JSON-LD block. */
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, path, markdownHref, ogType = 'website', jsonLd } = Astro.props;
+
+const canonical = new URL(path, SITE.url).href;
+const pageTitle = path === '/' ? title : `${title} — ${SITE.name}`;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={SITE.author} />
+
+    <Font cssVariable="--font-literata" preload />
+
+    {
+      /* The .md sibling is the agent surface; announce it on every page that
+         has one so a pointed agent can find the source without guessing. */
+      markdownHref && (
+        <link rel="alternate" type="text/markdown" href={markdownHref} title={`${title} (markdown source)`} />
+      )
+    }
+
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />}
+  </head>
+
+  <body>
+    <a class="skip" href="#content">Skip to content</a>
+
+    <div class="shell">
+      <header class="masthead">
+        <a class="sitename" href="/">{SITE.name}</a>
+        <span class="caption">a garden by {SITE.author}</span>
+      </header>
+
+      <main id="content">
+        <slot />
+      </main>
+
+      <footer class="colophon">
+        <span>Living documents — always being tended.</span>
+        <a href="/llms.txt">llms.txt</a>
+        <a href="/rss.xml">rss</a>
+        <a href={`https://github.com/${SITE.repo.owner}/${SITE.repo.name}`}>source</a>
+      </footer>
+    </div>
+  </body>
+</html>

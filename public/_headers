@@ -1,0 +1,36 @@
+# Cloudflare Pages headers.
+#
+# Caching policy in one line: fingerprinted assets are immutable forever,
+# everything that carries content revalidates on every request. A tended
+# article has to be fresh worldwide the moment the deploy lands — Pages purges
+# its edge cache per deploy, so default etag revalidation is exactly right and
+# a long max-age here would actively break the freshness promise (§8.3).
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'none'
+
+# Hashed filenames: safe to cache forever. Covers the two Literata subsets,
+# which Astro's Fonts API emits under /_astro/fonts/.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The agent surface. Serve markdown as markdown so a fetch doesn't get
+# second-guessed by content sniffing or rendered as a download.
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+
+/llms-full.txt
+  Content-Type: text/markdown; charset=utf-8
+
+# The project also serves at <project>.pages.dev, a full duplicate of the
+# canonical site. Canonical tags already point home; this closes the rest.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex

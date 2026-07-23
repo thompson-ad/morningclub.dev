@@ -1,0 +1,17 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# local toolchain (font subsetting only — outputs are committed)
+.venv/
+
+# environment / secrets — nothing private ever enters this repo (§9.2)
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store

@@ -1,0 +1,41 @@
+# morning club — https://morningclub.dev
+#
+# Everything here is open to everyone, including AI crawlers and training.
+# Being read by machines is the point, not a side effect: this garden is
+# written to be summarised, quoted and cited. The named stanzas below exist to
+# remove any ambiguity for the crawlers that look for themselves by name.
+#
+# Agents pointed at this site should start at /llms.txt — it indexes every
+# article as raw markdown, which is cheaper and cleaner than parsing the HTML.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://morningclub.dev/sitemap-index.xml

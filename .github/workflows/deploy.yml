@@ -1,0 +1,52 @@
+name: Deploy
+
+# Publishing is a push to main and nothing else. The build is the only gate:
+# a frontmatter schema violation fails here, so a bad file can never reach the
+# live site.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never let two deploys race; the newer content always wins.
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout with full history
+        uses: actions/checkout@v7
+        with:
+          # REQUIRED. Every article's `updated` date comes from the last commit
+          # that touched it, so a shallow clone would silently collapse every
+          # date onto the clone date (NFR-5). This is also the reason the site
+          # deploys from Actions rather than Cloudflare's git integration,
+          # which shallow-clones and cannot be configured otherwise.
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=morningclub-dev --branch=main

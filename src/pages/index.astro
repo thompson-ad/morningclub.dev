@@ -1,0 +1,62 @@
+---
+/**
+ * The front door, for humans and for crawlers (FR-3).
+ *
+ * A table of contents rather than a card grid: every article gets a title, one
+ * line of description, and a right-aligned tended date with its stage. Ordered
+ * by `updated` descending, so tending an old article brings it back to the top
+ * — which is the behaviour the whole model is built around.
+ */
+import Base from '../layouts/Base.astro';
+import StageChip from '../components/StageChip.astro';
+import { loadGarden } from '../lib/garden.ts';
+import { SITE, humanDay, isoDay } from '../lib/site.ts';
+
+const { articles } = await loadGarden();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: SITE.name,
+  description: SITE.tagline,
+  url: SITE.url,
+  author: { '@type': 'Person', name: SITE.author },
+  hasPart: articles.map((article) => ({
+    '@type': 'Article',
+    headline: article.title,
+    description: article.description,
+    url: new URL(`/${article.slug}`, SITE.url).href,
+    datePublished: isoDay(article.created),
+    dateModified: isoDay(article.updated),
+  })),
+};
+---
+
+<Base title={SITE.name} description={SITE.tagline} path="/" jsonLd={jsonLd}>
+  <h1>{SITE.name}</h1>
+
+  <p class="lede">
+    Notes that are alive. Everything here is public from the moment it exists and
+    gets revised in place, so each article carries a stage — how much weight to
+    put on it today — and a record of how the thinking changed.
+  </p>
+
+  <ol class="toc">
+    {
+      articles.map((article) => (
+        <li>
+          <div class="toc-head">
+            <h2 class="toc-title"><a href={`/${article.slug}`}>{article.title}</a></h2>
+            <span class="toc-date">
+              <time datetime={isoDay(article.updated)}>{humanDay(article.updated)}</time>
+            </span>
+          </div>
+          <p class="toc-desc">{article.description}</p>
+          <div class="toc-foot">
+            <StageChip stage={article.stage} />
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</Base>

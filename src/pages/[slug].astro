@@ -1,0 +1,114 @@
+---
+/**
+ * The article page (FR-3).
+ *
+ * Structure: title, the description set as a standfirst, a meta line in the
+ * garden vernacular (planted / tended), a hairline, then the text. The
+ * apparatus — changelog, then backlinks — closes the page quietly.
+ *
+ * "Planted" and "tended" are deliberate copy for humans only; every machine
+ * surface keeps `created` and `updated`.
+ */
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import StageChip from '../components/StageChip.astro';
+import { loadGarden, type Article } from '../lib/garden.ts';
+import { SITE, humanDay, isoDay } from '../lib/site.ts';
+
+export async function getStaticPaths() {
+  const { articles } = await loadGarden();
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article.entry);
+
+const garden = await loadGarden();
+const backlinks = article.backlinks
+  .map((slug) => garden.bySlug.get(slug))
+  .filter((entry): entry is Article => Boolean(entry));
+
+const url = new URL(`/${article.slug}`, SITE.url).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: article.title,
+  description: article.description,
+  datePublished: isoDay(article.created),
+  dateModified: isoDay(article.updated),
+  author: { '@type': 'Person', name: SITE.author },
+  publisher: { '@type': 'Person', name: SITE.author },
+  url,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  keywords: article.tags,
+  articleSection: article.stage,
+};
+---
+
+<Base
+  title={article.title}
+  description={article.description}
+  path={`/${article.slug}`}
+  markdownHref={`/${article.slug}.md`}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <article>
+    <h1>{article.title}</h1>
+    <p class="standfirst">{article.description}</p>
+
+    <div class="meta">
+      <StageChip stage={article.stage} />
+      <span>Planted <time datetime={isoDay(article.created)}>{humanDay(article.created)}</time></span>
+      <span>Tended <time datetime={isoDay(article.updated)}>{humanDay(article.updated)}</time></span>
+      <a href={`/${article.slug}/history.md`}>History</a>
+    </div>
+
+    <hr class="rule" />
+
+    <Content />
+
+    {
+      article.changelog.length > 0 && (
+        <section class="apparatus">
+          <h2>How this changed</h2>
+          <ol class="changelog">
+            {article.changelog.map((entry) => (
+              <li>
+                <div>
+                  <time datetime={isoDay(entry.date)}>{humanDay(entry.date)}</time>
+                  {entry.stage && <StageChip stage={entry.stage} />}
+                </div>
+                <p>{entry.note}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    {
+      backlinks.length > 0 && (
+        <section class="apparatus">
+          <h2>Linked from</h2>
+          <ul class="backlinks">
+            {backlinks.map((entry) => (
+              <li>
+                <a href={`/${entry.slug}`}>{entry.title}</a>
+                <p>{entry.description}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </article>
+</Base>
