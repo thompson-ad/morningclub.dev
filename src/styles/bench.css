@@ -289,8 +289,8 @@ p:has(> img:only-child) + p:has(> em:only-child) em {
 
 /* ------------------------------------------------------------ apparatus -- */
 
-/* Stage chip: the fill-state dot beside a lowercase word. Colourblind-proof
-   by construction — the signal is fill, not hue (§6.2). */
+/* Stage chip: the fill-state dot beside a lowercase word — rough, honed, keen.
+   Colourblind-proof by construction: the signal is fill, not hue (§6.2). */
 .stage {
   display: inline-flex;
   align-items: baseline;
@@ -311,15 +311,15 @@ p:has(> img:only-child) + p:has(> em:only-child) em {
   transform: translateY(0.02em);
 }
 
-.stage[data-stage='budding']::before {
+.stage[data-stage='honed']::before {
   background: linear-gradient(to right, currentColor 50%, transparent 50%);
 }
 
-.stage[data-stage='evergreen']::before {
+.stage[data-stage='keen']::before {
   background: currentColor;
 }
 
-/* The article's meta line: stage · planted · tended · history. */
+/* The article's meta line: stage · first cut · last honed · history. */
 .meta {
   display: flex;
   flex-wrap: wrap;

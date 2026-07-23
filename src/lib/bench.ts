@@ -1,5 +1,5 @@
 /**
- * The garden, assembled once and shared by every surface.
+ * The bench, assembled once and shared by every surface.
  *
  * One markdown file produces an HTML page, a raw `.md` sibling, an llms.txt
  * entry, a history document, an RSS item, a sitemap entry and a graph node.
@@ -10,7 +10,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import path from 'node:path';
 import { gitUpdated } from './git.ts';
 import { extractInternalLinks } from './links.ts';
-import { DRAFTS_DIR, ROOT, type Stage } from './site.ts';
+import { BENCH_DIR, ROOT, type Stage } from './site.ts';
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -24,6 +24,7 @@ export interface Article {
   slug: string;
   title: string;
   description: string;
+  /** When the idea first hit the bench. */
   created: Date;
   /** Derived from the file's last commit, never from frontmatter (NFR-5). */
   updated: Date;
@@ -41,40 +42,40 @@ export interface Article {
   dangling: string[];
   /** Slugs that link here. */
   backlinks: string[];
-  entry: CollectionEntry<'drafts'>;
+  entry: CollectionEntry<'bench'>;
 }
 
-export interface Garden {
-  /** Every article, newest `updated` first. */
+export interface Bench {
+  /** Every article, most recently honed first. */
   articles: Article[];
   bySlug: Map<string, Article>;
   /** Every resolved internal link, for /graph.json. */
   edges: Array<{ from: string; to: string }>;
-  /** Dangling links across the whole garden, for the build-log warning. */
+  /** Dangling links across the whole bench, for the build-log warning. */
   dangling: Array<{ from: string; to: string }>;
 }
 
-let cached: Promise<Garden> | undefined;
+let cached: Promise<Bench> | undefined;
 
 /** Memoised: the git and filesystem work happens once per build, not per page. */
-export function loadGarden(): Promise<Garden> {
+export function loadBench(): Promise<Bench> {
   cached ??= build();
   return cached;
 }
 
-async function build(): Promise<Garden> {
-  const entries = await getCollection('drafts');
+async function build(): Promise<Bench> {
+  const entries = await getCollection('bench');
 
   const slugs = new Set(entries.map((entry) => entry.id));
   const articles: Article[] = entries.map((entry) => {
     if (!SLUG.test(entry.id)) {
       throw new Error(
-        `Invalid slug "${entry.id}" in ${DRAFTS_DIR}/ — slugs are permanent public ` +
+        `Invalid slug "${entry.id}" in ${BENCH_DIR}/ — slugs are permanent public ` +
           `URLs and must be lowercase kebab-case (a-z, 0-9, -).`,
       );
     }
 
-    const filePath = path.join(ROOT, DRAFTS_DIR, `${entry.id}.md`);
+    const filePath = path.join(ROOT, BENCH_DIR, `${entry.id}.md`);
     const body = entry.body ?? '';
 
     // Resolve this article's outbound links once, splitting live from dangling.
@@ -110,7 +111,7 @@ async function build(): Promise<Garden> {
   const bySlug = new Map(articles.map((article) => [article.slug, article]));
 
   // Invert the link graph. Backlinks follow the same `updated`-desc order as
-  // everything else, so "Linked from" reads most-recently-tended first.
+  // everything else, so "Linked from" reads most-recently-honed first.
   for (const article of articles) {
     for (const target of article.links) {
       bySlug.get(target)?.backlinks.push(article.slug);
@@ -127,8 +128,8 @@ async function build(): Promise<Garden> {
   return { articles, bySlug, edges, dangling: danglingAll };
 }
 
-/** Resolve slugs to articles, preserving the garden's `updated`-desc order. */
-export function resolve(garden: Garden, slugs: string[]): Article[] {
+/** Resolve slugs to articles, preserving the bench's `updated`-desc order. */
+export function resolve(bench: Bench, slugs: string[]): Article[] {
   const wanted = new Set(slugs);
-  return garden.articles.filter((article) => wanted.has(article.slug));
+  return bench.articles.filter((article) => wanted.has(article.slug));
 }

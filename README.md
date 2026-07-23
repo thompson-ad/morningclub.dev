@@ -1,41 +1,43 @@
 # morningclub.dev
 
-A living digital garden. Markdown articles that start rough and get revised in
-place, public from the moment they exist.
+A working bench. Ideas arrive rough, get honed against real work, and stay sharp
+only because I keep coming back to them.
 
 **Site:** <https://morningclub.dev>
 
-Every article lives at a permanent URL and carries a *stage* — seedling
-(rough), budding (a real position, still moving), evergreen (settled) — plus a
-curated record of how the thinking changed. Nothing here is "finished"; the
-directory is called `drafts/` to keep that honest.
+This is the public bench for [Morning Club](https://github.com/thompson-ad/morning-club) —
+a project about staying sharp as an engineer while agents do the typing. Every
+article lives at a permanent URL and carries a *stage* — rough (just off the
+saw), honed (taking an edge, still moving), keen (sharp, and kept that way) —
+plus a record of what each pass changed. Nothing here is finished; that isn't a
+state a blade has.
 
 ## For agents and LLMs
 
-Start at **<https://morningclub.dev/llms.txt>**. It indexes every article as
-raw markdown with its stage and last-tended date.
+Start at **<https://morningclub.dev/llms.txt>**. It indexes every article as raw
+markdown with its stage and last-honed date.
 
 | Surface | What it is |
 |---|---|
 | `/llms.txt` | Index of every article, linking to raw markdown |
-| `/llms-full.txt` | The entire corpus in one fetch |
+| `/llms-full.txt` | The entire bench in one fetch |
 | `/<slug>.md` | One article's actual source, frontmatter included |
-| `/<slug>/history.md` | How that article's thinking changed, with links into git history |
+| `/<slug>/history.md` | What each pass at that article changed, with links into git history |
 | `/graph.json` | The link graph between articles (nodes and edges) |
-| `/rss.xml` | Full-content feed, ordered by last tended |
+| `/rss.xml` | Full-content feed, ordered by last honed |
 
 Crawling and training are explicitly welcome — see [robots.txt](public/robots.txt).
 
-`updated` dates come from the last git commit that touched each file, never
-from build time, so freshness signals here are accurate rather than decorative.
+`updated` dates come from the last git commit that touched each file, never from
+build time, so freshness signals here are accurate rather than decorative.
 
 ## Writing
 
-Articles are plain CommonMark + GFM in [`drafts/`](drafts/), one file per
-article, filename is the slug. Publishing is a push:
+Articles are plain CommonMark + GFM in [`bench/`](bench/), one file per article,
+filename is the slug. Publishing is a push:
 
 ```bash
-git add drafts/some-idea.md && git commit -m "plant" && git push
+git add bench/some-idea.md && git commit -m "another pass" && git push
 ```
 
 See [AUTHORING.md](AUTHORING.md) for the writing guidance, frontmatter schema,
@@ -51,18 +53,19 @@ Built with [Astro](https://astro.build) as a fully static site with zero client
 JavaScript. `npm run build` produces `dist/`; a frontmatter schema violation
 fails the build rather than the site.
 
-- `drafts/` — every article, flat
+- `bench/` — every article, flat
 - `images/` — article images, referenced root-relative as `/images/x.png`
-- `src/lib/` — the garden model: git dates, link graph, agent surfaces
+- `src/lib/` — the bench model: git dates, link graph, agent surfaces
 - `scripts/subset-fonts.sh` — regenerates the two Literata subsets (outputs are
   committed; the build needs no Python)
+- `scripts/verify.sh` — the acceptance suite, runnable against any base URL
 
 Deploys to Cloudflare Pages from `main` via GitHub Actions. One-time platform
 setup is documented in [MANUAL-SETUP.md](MANUAL-SETUP.md).
 
 > [!IMPORTANT]
-> This repository is public and its history is permanent — the evolution
-> surface depends on commit SHAs staying valid. Nothing private, no secrets, no
+> This repository is public and its history is permanent — the history surface
+> depends on commit SHAs staying valid. Nothing private, no secrets, no
 > unpublished personal notes.
 
 ## Licence

@@ -3,16 +3,16 @@
  * The front door, for humans and for crawlers (FR-3).
  *
  * A table of contents rather than a card grid: every article gets a title, one
- * line of description, and a right-aligned tended date with its stage. Ordered
- * by `updated` descending, so tending an old article brings it back to the top
+ * line of description, and a right-aligned last-honed date with its stage. Ordered
+ * by `updated` descending, so honing an old article brings it back to the top
  * — which is the behaviour the whole model is built around.
  */
 import Base from '../layouts/Base.astro';
 import StageChip from '../components/StageChip.astro';
-import { loadGarden } from '../lib/garden.ts';
+import { loadBench } from '../lib/bench.ts';
 import { SITE, humanDay, isoDay } from '../lib/site.ts';
 
-const { articles } = await loadGarden();
+const { articles } = await loadBench();
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -36,9 +36,10 @@ const jsonLd = {
   <h1>{SITE.name}</h1>
 
   <p class="lede">
-    Notes that are alive. Everything here is public from the moment it exists and
-    gets revised in place, so each article carries a stage — how much weight to
-    put on it today — and a record of how the thinking changed.
+    Ideas on the bench. They arrive rough, get honed against real work, and the
+    sharp ones stay sharp only because I keep coming back to them. Each carries a
+    stage saying how much weight to put on it today, and a record of what every
+    pass changed.
   </p>
 
   <ol class="toc">

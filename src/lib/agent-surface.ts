@@ -8,8 +8,8 @@
  * is that it is the real thing.
  */
 import { readFileSync } from 'node:fs';
-import type { Article, Garden } from './garden.ts';
-import { SITE, commitsUrl, rawUrl, isoDay, DRAFTS_DIR } from './site.ts';
+import type { Article, Bench } from './bench.ts';
+import { SITE, commitsUrl, rawUrl, isoDay, BENCH_DIR } from './site.ts';
 
 const absolute = (path: string) => new URL(path, SITE.url).href;
 
@@ -57,13 +57,13 @@ export function rawSibling(article: Article): string {
  */
 export function historyDocument(article: Article): string {
   const events = article.changelog.map((entry) => {
-    const transition = entry.stage ? ` **became ${entry.stage}** — ` : ' ';
+    const transition = entry.stage ? ` **${entry.stage} from here** — ` : ' ';
     return `- **${isoDay(entry.date)}** —${transition}${entry.note}`;
   });
 
-  // The planting event closes the list; we assert only what we know, so no
-  // stage is claimed for it unless a changelog entry recorded one.
-  events.push(`- **${isoDay(article.created)}** — planted.`);
+  // The first pass closes the list; we assert only what we know, so no stage is
+  // claimed for it unless a changelog entry recorded one.
+  events.push(`- **${isoDay(article.created)}** — first cut.`);
 
   const lines = [
     '---',
@@ -77,17 +77,18 @@ export function historyDocument(article: Article): string {
     '',
     `# History — ${article.title}`,
     '',
-    '> How this article changed, and why. The curated notes below are the record;',
-    '> the raw git history linked at the bottom is the drill-down. Entries are',
-    '> newest first, and record changes in the thinking rather than in the prose.',
+    '> What each pass at this article changed, and why. The curated notes below are',
+    '> the record; the raw git history linked at the bottom is the drill-down.',
+    '> Entries are newest first, and record changes in the thinking rather than in',
+    '> the prose.',
     '',
-    '## Changes',
+    '## Passes',
     '',
     ...events,
     '',
     '## Raw history',
     '',
-    `Every revision of this article is a commit against \`${DRAFTS_DIR}/${article.slug}.md\`:`,
+    `Every revision of this article is a commit against \`${BENCH_DIR}/${article.slug}.md\`:`,
     '',
     `<${commitsUrl(article.slug)}>`,
     '',
@@ -110,8 +111,8 @@ export function historyDocument(article: Article): string {
  * specifies: H1, a blockquote of orientation, then H2 link sections. Links point
  * at the `.md` sources rather than the HTML, so following one lands in markdown.
  */
-export function llmsIndex(garden: Garden): string {
-  const articles = garden.articles.map(
+export function llmsIndex(bench: Bench): string {
+  const articles = bench.articles.map(
     (article) =>
       `- [${article.title}](${sourceUrl(article.slug)}): ${article.description} — ` +
       `${article.stage}, updated ${isoDay(article.updated)}`,
@@ -120,23 +121,23 @@ export function llmsIndex(garden: Garden): string {
   return [
     `# ${SITE.name}`,
     '',
-    `> ${SITE.tagline} Every article here is a living document, revised in place at a`,
-    '> permanent URL rather than superseded by a newer post. Each carries a stage —',
-    '> seedling (rough), budding (a real position, still moving), or evergreen',
-    '> (settled) — saying how much weight to put on it today, and a companion',
-    '> document at `<slug>/history.md` recording how the thinking changed and why.',
-    '> `updated` dates come from the last commit that touched the file, so they are',
-    '> accurate rather than aspirational. The links below point at raw markdown.',
+    `> ${SITE.tagline} Everything here is a working note kept at a permanent URL and`,
+    '> honed in place, rather than superseded by a newer post. Each carries a stage —',
+    '> rough (just off the saw), honed (taking an edge, still moving), or keen',
+    '> (sharp, and kept that way) — saying how much weight to put on it today, and a',
+    '> companion document at `<slug>/history.md` recording what each pass changed and',
+    '> why. `updated` dates come from the last commit that touched the file, so they',
+    '> are accurate rather than aspirational. The links below point at raw markdown.',
     '',
     '## Articles',
     '',
     ...articles,
     '',
-    '## Whole corpus',
+    '## Whole bench',
     '',
     `- [llms-full.txt](${absolute('/llms-full.txt')}): every article above concatenated into one fetch.`,
     `- [graph.json](${absolute('/graph.json')}): the link graph between articles, as nodes and edges.`,
-    `- [rss.xml](${absolute('/rss.xml')}): the feed, ordered by when each article was last tended.`,
+    `- [rss.xml](${absolute('/rss.xml')}): the feed, ordered by when each article was last honed.`,
     '',
     '## Optional',
     '',
@@ -146,25 +147,25 @@ export function llmsIndex(garden: Garden): string {
 }
 
 /**
- * The entire corpus in one fetch, newest first.
+ * The entire bench in one fetch, newest first.
  *
  * The header dates the *corpus*, not the build. Stamping build time here would
  * make a no-op rebuild change a date, which is exactly the dishonesty NFR-5
  * exists to prevent — so we report when the content last actually changed.
  */
-export function llmsFull(garden: Garden): string {
-  const { articles } = garden;
+export function llmsFull(bench: Bench): string {
+  const { articles } = bench;
   const lastChanged = articles[0]?.updated;
 
   const header = [
-    `# ${SITE.name} — complete corpus`,
+    `# ${SITE.name} — complete bench`,
     '',
-    `> ${SITE.tagline} This file is every article in the garden, concatenated,`,
-    '> ordered by when each was last tended (most recent first). Each article is',
+    `> ${SITE.tagline} This file is every article on the bench, concatenated,`,
+    '> ordered by when each was last honed (most recent first). Each article is',
     '> preceded by a metadata block giving its canonical URL, stage and dates.',
     '',
     `Articles: ${articles.length}`,
-    ...(lastChanged ? [`Corpus last changed: ${isoDay(lastChanged)}`] : []),
+    ...(lastChanged ? [`Bench last changed: ${isoDay(lastChanged)}`] : []),
     '',
   ];
 
@@ -190,9 +191,9 @@ export function llmsFull(garden: Garden): string {
 }
 
 /** The link graph, for agents that want the shape of the network (FR-7). */
-export function graphExport(garden: Garden) {
+export function graphExport(bench: Bench) {
   return {
-    nodes: garden.articles.map((article) => ({
+    nodes: bench.articles.map((article) => ({
       slug: article.slug,
       title: article.title,
       stage: article.stage,
@@ -200,6 +201,6 @@ export function graphExport(garden: Garden) {
       url: articleUrl(article.slug),
       source: sourceUrl(article.slug),
     })),
-    edges: garden.edges,
+    edges: bench.edges,
   };
 }

@@ -1,5 +1,5 @@
 /**
- * The one content collection: every article in drafts/ (FR-1).
+ * The one content collection: every article on the bench (FR-1).
  *
  * Content lives at the repo root, not under src/ — an article is the thing this
  * project is for, not an implementation detail of the site that renders it. The
@@ -18,22 +18,22 @@ const stage = z.enum(STAGES);
 const changelogEntry = z.object({
   date: z.date(),
   note: z.string().min(1),
-  /** Present only when this revision moved the article to a new stage. */
+  /** Present only when this pass moved the article to a new stage. */
   stage: stage.optional(),
 });
 
 export const collections = {
-  drafts: defineCollection({
-    // `base` resolves from the project root, so this reaches drafts/ at the
+  bench: defineCollection({
+    // `base` resolves from the project root, so this reaches bench/ at the
     // repo root rather than anything under src/.
-    loader: glob({ pattern: '*.md', base: './drafts' }),
+    loader: glob({ pattern: '*.md', base: './bench' }),
     schema: z.object({
       title: z.string().min(1),
       description: z
         .string()
         .min(1)
         .max(200, 'description must be 200 characters or fewer — it is a one-line summary'),
-      /** The date the idea entered the garden. `updated` is git-derived, never written here. */
+      /** The date the idea first hit the bench. `updated` is git-derived, never written here. */
       created: z.date(),
       stage,
       tags: z
@@ -43,7 +43,7 @@ export const collections = {
             .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'tags must be lowercase kebab-case'),
         )
         .default([]),
-      /** The curated evolution record — the layer of record above raw git history. */
+      /** The curated record of what each pass changed — the layer of record above raw git history. */
       changelog: z.array(changelogEntry).default([]),
     }),
   }),

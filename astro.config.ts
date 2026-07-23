@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import { internalLinks, imageAttributes, warnings } from './src/markdown/plugins.ts';
 import { gitUpdated } from './src/lib/git.ts';
-import { SITE, DRAFTS_DIR, isoDay } from './src/lib/site.ts';
+import { SITE, BENCH_DIR, isoDay } from './src/lib/site.ts';
 
 const ROOT = path.resolve(fileURLToPath(new URL('.', import.meta.url)));
 
@@ -20,7 +20,7 @@ const ROOT = path.resolve(fileURLToPath(new URL('.', import.meta.url)));
  * astro.config runs before collections are available.
  */
 function updatedBySlug(): Map<string, Date> {
-  const dir = path.join(ROOT, DRAFTS_DIR);
+  const dir = path.join(ROOT, BENCH_DIR);
   const dates = new Map<string, Date>();
   for (const name of readdirSync(dir)) {
     if (!name.endsWith('.md')) continue;
@@ -51,8 +51,8 @@ const mimeFor = (file: string) =>
  * in the raw .md sibling (FR-8). They deliberately skip Astro's optimizer, which
  * would rewrite them to hashed /_astro/ paths and break that parity (NFR-7).
  */
-const garden = () => ({
-  name: 'garden',
+const bench = () => ({
+  name: 'bench',
   hooks: {
     'astro:server:setup': ({ server }: { server: { middlewares: any } }) => {
       server.middlewares.use((req: any, res: any, next: () => void) => {
@@ -84,8 +84,8 @@ const garden = () => ({
         cpSync(from, path.join(fileURLToPath(dir), 'images'), { recursive: true });
       }
       if (warnings.dangling.size > 0) {
-        // Not an error: linking to not-yet-written articles is how the garden
-        // grows. This list doubles as the to-write queue.
+        // Not an error: linking to a piece you haven't cut yet is normal.
+        // This list doubles as the to-write queue.
         const lines = [...warnings.dangling.entries()]
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([from, targets]) => `  ${from} → ${[...targets].sort().join(', ')}`);
@@ -142,7 +142,7 @@ export default defineConfig({
   vite: {
     // Build-time code that reads git and image bytes is bundled into dist/,
     // where import.meta.url no longer points at the repo. Bake the root in.
-    define: { __GARDEN_ROOT__: JSON.stringify(ROOT) },
+    define: { __BENCH_ROOT__: JSON.stringify(ROOT) },
   },
 
   integrations: [
@@ -155,6 +155,6 @@ export default defineConfig({
         return item;
       },
     }),
-    garden(),
+    bench(),
   ],
 });

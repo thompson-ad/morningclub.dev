@@ -16,9 +16,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { internalTarget, articleHref } from '../lib/links.ts';
 import { imageSize } from '../lib/imagesize.ts';
-import { DRAFTS_DIR, ROOT } from '../lib/site.ts';
+import { BENCH_DIR, ROOT } from '../lib/site.ts';
 
-/** Build-log warnings, drained and printed once by the garden integration. */
+/** Build-log warnings, drained and printed once by the bench integration. */
 export interface BuildWarnings {
   /** slug → the not-yet-written slugs it links to (the author's to-write list). */
   dangling: Map<string, Set<string>>;
@@ -31,11 +31,11 @@ export const warnings: BuildWarnings = {
   images: new Set(),
 };
 
-/** Slugs that currently exist in drafts/, re-read per compile so dev stays live. */
+/** Slugs that currently exist on the bench, re-read per compile so dev stays live. */
 function existingSlugs(): Set<string> {
   try {
     return new Set(
-      readdirSync(path.join(ROOT, DRAFTS_DIR))
+      readdirSync(path.join(ROOT, BENCH_DIR))
         .filter((name) => name.endsWith('.md'))
         .map((name) => name.slice(0, -3)),
     );
@@ -52,12 +52,12 @@ function sourceSlug(fileURL: URL | undefined): string {
 /**
  * Rewrite sibling-file links to their HTML URLs.
  *
- * Linking to an article that doesn't exist yet is core garden authoring, so a
- * dangling link is a warning and a plain-text render — never a build failure.
+ * Linking to an article that doesn't exist yet is normal here, so a dangling
+ * link is a warning and a plain-text render — never a build failure.
  */
 export const internalLinks = () =>
   defineMdastPlugin({
-    name: 'garden:internal-links',
+    name: 'bench:internal-links',
     link(node, ctx) {
       const target = internalTarget(node.url);
       if (!target) return;
@@ -84,7 +84,7 @@ export const internalLinks = () =>
  */
 export const imageAttributes = () =>
   defineHastPlugin({
-    name: 'garden:image-attributes',
+    name: 'bench:image-attributes',
     element: {
       filter: ['img'],
       visit(node, ctx) {

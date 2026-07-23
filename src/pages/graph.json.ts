@@ -5,10 +5,10 @@
  * purely presentational change that touches no content.
  */
 import type { APIRoute } from 'astro';
-import { loadGarden } from '../lib/garden.ts';
+import { loadBench } from '../lib/bench.ts';
 import { graphExport } from '../lib/agent-surface.ts';
 
 export const GET: APIRoute = async () =>
-  new Response(JSON.stringify(graphExport(await loadGarden()), null, 2), {
+  new Response(JSON.stringify(graphExport(await loadBench()), null, 2), {
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
   });
