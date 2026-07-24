@@ -289,8 +289,10 @@ p:has(> img:only-child) + p:has(> em:only-child) em {
 
 /* ------------------------------------------------------------ apparatus -- */
 
-/* Stage chip: the fill-state dot beside a lowercase word — rough, honed, keen.
-   Colourblind-proof by construction: the signal is fill, not hue (§6.2). */
+/* Stage chip: the fill-state dot beside a lowercase word. Keyed on the neutral
+   stage value, so the fill is metaphor-independent (§6.2). Colourblind-proof by
+   construction: the signal is fill, not hue. Default (exploratory) is the bare
+   outline; developing is half-filled; established is solid. */
 .stage {
   display: inline-flex;
   align-items: baseline;
@@ -311,15 +313,15 @@ p:has(> img:only-child) + p:has(> em:only-child) em {
   transform: translateY(0.02em);
 }
 
-.stage[data-stage='honed']::before {
+.stage[data-stage='developing']::before {
   background: linear-gradient(to right, currentColor 50%, transparent 50%);
 }
 
-.stage[data-stage='keen']::before {
+.stage[data-stage='established']::before {
   background: currentColor;
 }
 
-/* The article's meta line: stage · first cut · last honed · history. */
+/* The article's meta line: stage · created · updated · history (labels from the lexicon). */
 .meta {
   display: flex;
   flex-wrap: wrap;

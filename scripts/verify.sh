@@ -45,7 +45,7 @@ check "rss.xml has items"                   "body '/rss.xml' | grep -q '<item>'"
 check "rss.xml carries full content"        "body '/rss.xml' | grep -q 'content:encoded'"
 check "sitemap index exists"                "body '/sitemap-index.xml' | grep -q 'sitemap'"
 check "sitemap has real lastmod dates"      "body '/sitemap-0.xml' | grep -q '<lastmod>'"
-check "404 page exists"                     "body '/404' | grep -qi 'nothing on the bench'"
+check "404 page exists"                     "body '/404' | grep -qi 'slugs here are permanent'"
 
 echo
 echo "Agent surface"
@@ -63,7 +63,7 @@ check "llms.txt lists an Articles section"  "body '/llms.txt' | grep -q '^## Art
 check "llms.txt links .md not .html"        "body '/llms.txt' | grep -q '/$ARTICLE.md)'"
 check "llms.txt lists graph.json"           "body '/llms.txt' | grep -q 'graph.json'"
 check "llms-full.txt contains the corpus"   "body '/llms-full.txt' | grep -q '$ARTICLE'"
-check "history.md points at git history"    "body '/$ARTICLE/history.md' | grep -q 'commits/main/bench'"
+check "history.md points at git history"    "body '/$ARTICLE/history.md' | grep -q 'commits/main/notes'"
 check "history.md explains raw fetching"    "body '/$ARTICLE/history.md' | grep -q 'raw.githubusercontent.com'"
 check "robots.txt names GPTBot"             "body '/robots.txt' | grep -q 'GPTBot'"
 check "robots.txt names ClaudeBot"          "body '/robots.txt' | grep -q 'ClaudeBot'"

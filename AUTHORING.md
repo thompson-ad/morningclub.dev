@@ -4,10 +4,10 @@ How to write on this bench, and why the conventions are what they are.
 
 ## The shape of an article
 
-One file per article, flat in `bench/`, filename is the slug:
+One file per article, flat in `notes/`, filename is the slug:
 
 ```
-bench/spaced-repetition-forcing-function.md  →  https://morningclub.dev/spaced-repetition-forcing-function
+notes/spaced-repetition-forcing-function.md  →  https://morningclub.dev/spaced-repetition-forcing-function
 ```
 
 **Slugs are permanent.** They're what citations, training corpora and agents hold
@@ -24,12 +24,12 @@ Slugs are lowercase kebab-case: `a-z`, `0-9`, `-`.
 title: "Spaced repetition is a forcing function, not a memory trick"
 description: "One-sentence summary used in indexes, meta tags and llms.txt."
 created: 2026-07-22
-stage: rough
+stage: exploratory
 tags: [learning, practice]
 changelog:
   - date: 2026-08-10
     note: "Reversed the core claim after testing against three months of review data."
-    stage: honed
+    stage: developing
 ---
 ```
 
@@ -38,7 +38,7 @@ changelog:
 | `title` | yes | |
 | `description` | yes | ≤ 200 characters. It's the standfirst, the meta description, and the llms.txt line — write it as a real sentence. |
 | `created` | yes | The date the idea first hit the bench. |
-| `stage` | yes | `rough` \| `honed` \| `keen` |
+| `stage` | yes | `exploratory` \| `developing` \| `established` (renders as rough / honed / keen) |
 | `tags` | no | lowercase kebab-case |
 | `changelog` | no | See below. |
 
@@ -51,14 +51,19 @@ file and the field; it can't reach the live site.
 
 ### Stages
 
-- **rough** — just off the saw. Thinking out loud, might be wrong.
-- **honed** — taking an edge. A real position, argued, but still moving.
-- **keen** — sharp, and kept that way. You'd defend it.
+You type the neutral value on the left; the site renders the label on the right.
+
+- **`exploratory`** → *rough* — just off the saw. Thinking out loud, might be wrong.
+- **`developing`** → *honed* — taking an edge. A real position, argued, but still moving.
+- **`established`** → *keen* — sharp, and kept that way. You'd defend it.
 
 A stage is a claim about how much weight a reader should put on the piece today,
-not a measure of effort spent. Plenty of ideas deserve to sit at rough forever.
-Don't add new stages — the taxonomy appears in the HTML, the llms.txt, the
-history documents, and readers' expectations.
+not a measure of effort spent. Plenty of ideas deserve to sit at `exploratory`
+forever. Don't add new stages — the three values are the permanent frontmatter
+contract (they appear byte-for-byte in every `.md` sibling, llms.txt and the
+graph). The *words* rough / honed / keen are only a skin: they live in
+`src/lib/lexicon.ts` and can change without touching a single article. So write
+the neutral value and never the label.
 
 ### The changelog
 
@@ -73,7 +78,7 @@ changelog:
   # good — says what changed and why
   - date: 2026-08-10
     note: "Reversed the core claim. Three months of review data showed the effect I attributed to spacing was mostly retrieval difficulty."
-    stage: honed
+    stage: developing
 
   # noise — don't
   - date: 2026-08-11
@@ -150,7 +155,7 @@ Evidence-backed practices for work that gets found and cited:
 ## Publishing
 
 ```bash
-git add bench/some-idea.md && git commit -m "another pass" && git push
+git add notes/some-idea.md && git commit -m "another pass" && git push
 ```
 
 CI builds and deploys. There is no draft state, no review step, and no preview

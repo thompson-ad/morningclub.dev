@@ -2,12 +2,12 @@
 title: "Sharpening is a publishing model, not a metaphor"
 description: "Treating writing as edge maintenance changes what you optimise for: returning beats shipping, and the record of what each pass changed is the most valuable thing on the page."
 created: 2026-06-12
-stage: honed
+stage: developing
 tags: [writing, craft, publishing]
 changelog:
   - date: 2026-07-18
     note: "Reversed the framing. I'd been treating the stages as a ladder to climb; they're closer to a report on the edge — a claim about how much weight the reader should put on the piece today, not a score for effort spent."
-    stage: honed
+    stage: developing
   - date: 2026-06-28
     note: "Cut the section arguing this replaces essays. It doesn't. This is upstream of essays — it's where claims get tested against real work before anything is worth publishing properly."
 ---
@@ -40,7 +40,7 @@ written but when it was last worked.
 Every article here carries one of three stages, and they're the most useful
 piece of metadata on the page:
 
-![Three circles left to right: an outline circle labelled rough, a half-filled circle labelled honed, and a solid filled circle labelled keen, connected by dotted lines.](/images/bench-stages.svg)
+![Three circles left to right: an outline circle labelled rough, a half-filled circle labelled honed, and a solid filled circle labelled keen, connected by dotted lines.](/images/stages.svg)
 
 *The three stages, drawn the way they appear beside every article title.*
 

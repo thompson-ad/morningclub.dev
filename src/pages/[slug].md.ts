@@ -5,11 +5,11 @@
  * pointed agent should be given when asked to summarise or quote the piece.
  */
 import type { APIRoute } from 'astro';
-import { loadBench, type Article } from '../lib/bench.ts';
+import { loadCorpus, type Article } from '../lib/corpus.ts';
 import { rawSibling } from '../lib/agent-surface.ts';
 
 export async function getStaticPaths() {
-  const { articles } = await loadBench();
+  const { articles } = await loadCorpus();
   return articles.map((article) => ({
     params: { slug: article.slug },
     props: { article },

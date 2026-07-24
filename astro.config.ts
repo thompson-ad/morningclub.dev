@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import { internalLinks, imageAttributes, warnings } from './src/markdown/plugins.ts';
 import { gitUpdated } from './src/lib/git.ts';
-import { SITE, BENCH_DIR, isoDay } from './src/lib/site.ts';
+import { SITE, NOTES_DIR, isoDay } from './src/lib/site.ts';
 
 const ROOT = path.resolve(fileURLToPath(new URL('.', import.meta.url)));
 
@@ -20,7 +20,7 @@ const ROOT = path.resolve(fileURLToPath(new URL('.', import.meta.url)));
  * astro.config runs before collections are available.
  */
 function updatedBySlug(): Map<string, Date> {
-  const dir = path.join(ROOT, BENCH_DIR);
+  const dir = path.join(ROOT, NOTES_DIR);
   const dates = new Map<string, Date>();
   for (const name of readdirSync(dir)) {
     if (!name.endsWith('.md')) continue;
@@ -51,8 +51,8 @@ const mimeFor = (file: string) =>
  * in the raw .md sibling (FR-8). They deliberately skip Astro's optimizer, which
  * would rewrite them to hashed /_astro/ paths and break that parity (NFR-7).
  */
-const bench = () => ({
-  name: 'bench',
+const site = () => ({
+  name: 'site',
   hooks: {
     'astro:server:setup': ({ server }: { server: { middlewares: any } }) => {
       server.middlewares.use((req: any, res: any, next: () => void) => {
@@ -142,7 +142,7 @@ export default defineConfig({
   vite: {
     // Build-time code that reads git and image bytes is bundled into dist/,
     // where import.meta.url no longer points at the repo. Bake the root in.
-    define: { __BENCH_ROOT__: JSON.stringify(ROOT) },
+    define: { __REPO_ROOT__: JSON.stringify(ROOT) },
   },
 
   integrations: [
@@ -155,6 +155,6 @@ export default defineConfig({
         return item;
       },
     }),
-    bench(),
+    site(),
   ],
 });

@@ -2,7 +2,7 @@
  * `/rss.xml` — full content, latest 20 by `updated` (FR-3).
  *
  * Full content rather than summaries: a feed reader should be able to read the
- * article without a round trip. Ordered by when each was last honed, so a
+ * article without a round trip. Ordered by when each was last revised, so a
  * substantially revised article legitimately resurfaces.
  *
  * This URL is permanent (§9.8).
@@ -10,11 +10,11 @@
 import rss from '@astrojs/rss';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { render } from 'astro:content';
-import { loadBench } from '../lib/bench.ts';
+import { loadCorpus } from '../lib/corpus.ts';
 import { SITE } from '../lib/site.ts';
 
 export async function GET() {
-  const { articles } = await loadBench();
+  const { articles } = await loadCorpus();
   const container = await AstroContainer.create();
 
   const items = await Promise.all(
@@ -26,7 +26,7 @@ export async function GET() {
         title: article.title,
         description: article.description,
         link: `/${article.slug}`,
-        // The feed's date is the last-honed date — the thing that actually changed.
+        // The feed's date is the last-revised date — the thing that actually changed.
         pubDate: article.updated,
         categories: [article.stage, ...article.tags],
         content: html,

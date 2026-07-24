@@ -1,13 +1,15 @@
 ---
 /**
- * The stage mark: a fill-state dot beside a lowercase word — how sharp the
- * idea is, from rough through honed to keen.
+ * The stage mark: a fill-state dot beside a lowercase word.
  *
- * Encoded by fill rather than hue (○ ◐ ●) so it survives a monochrome palette
- * and any form of colour blindness by construction. Drawn in CSS rather than
- * with unicode glyphs, whose rendering varies wildly across platforms (§6.2).
+ * The dot is keyed on the neutral domain value (`data-stage`), so its fill
+ * survives a metaphor change untouched; the visible word is the metaphor's, and
+ * comes from the lexicon. Encoded by fill rather than hue (○ ◐ ●) so it survives
+ * a monochrome palette and any colour blindness by construction, and drawn in
+ * CSS rather than unicode glyphs, whose rendering varies across platforms (§6.2).
  */
 import type { Stage } from '../lib/site.ts';
+import { stageLabel } from '../lib/lexicon.ts';
 
 interface Props {
   stage: Stage;
@@ -16,4 +18,4 @@ interface Props {
 const { stage } = Astro.props;
 ---
 
-<span class="stage" data-stage={stage}>{stage}</span>
+<span class="stage" data-stage={stage}>{stageLabel(stage)}</span>

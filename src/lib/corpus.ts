@@ -1,16 +1,20 @@
 /**
- * The bench, assembled once and shared by every surface.
+ * The corpus, assembled once and shared by every surface.
  *
  * One markdown file produces an HTML page, a raw `.md` sibling, an llms.txt
  * entry, a history document, an RSS item, a sitemap entry and a graph node.
  * They all read from here, so none of them can disagree about a date, a stage,
  * or who links to whom.
+ *
+ * Nothing in this module knows the site's metaphor — an article has a `stage`,
+ * a `created` and an `updated`, and the reader-facing words for those are
+ * applied later, at the HTML view, from [[lexicon]].
  */
 import { getCollection, type CollectionEntry } from 'astro:content';
 import path from 'node:path';
 import { gitUpdated } from './git.ts';
 import { extractInternalLinks } from './links.ts';
-import { BENCH_DIR, ROOT, type Stage } from './site.ts';
+import { NOTES_DIR, ROOT, type Stage } from './site.ts';
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -24,7 +28,7 @@ export interface Article {
   slug: string;
   title: string;
   description: string;
-  /** When the idea first hit the bench. */
+  /** When the idea was first written. */
   created: Date;
   /** Derived from the file's last commit, never from frontmatter (NFR-5). */
   updated: Date;
@@ -42,40 +46,40 @@ export interface Article {
   dangling: string[];
   /** Slugs that link here. */
   backlinks: string[];
-  entry: CollectionEntry<'bench'>;
+  entry: CollectionEntry<'notes'>;
 }
 
-export interface Bench {
-  /** Every article, most recently honed first. */
+export interface Corpus {
+  /** Every article, most recently revised first. */
   articles: Article[];
   bySlug: Map<string, Article>;
   /** Every resolved internal link, for /graph.json. */
   edges: Array<{ from: string; to: string }>;
-  /** Dangling links across the whole bench, for the build-log warning. */
+  /** Dangling links across the whole corpus, for the build-log warning. */
   dangling: Array<{ from: string; to: string }>;
 }
 
-let cached: Promise<Bench> | undefined;
+let cached: Promise<Corpus> | undefined;
 
 /** Memoised: the git and filesystem work happens once per build, not per page. */
-export function loadBench(): Promise<Bench> {
+export function loadCorpus(): Promise<Corpus> {
   cached ??= build();
   return cached;
 }
 
-async function build(): Promise<Bench> {
-  const entries = await getCollection('bench');
+async function build(): Promise<Corpus> {
+  const entries = await getCollection('notes');
 
   const slugs = new Set(entries.map((entry) => entry.id));
   const articles: Article[] = entries.map((entry) => {
     if (!SLUG.test(entry.id)) {
       throw new Error(
-        `Invalid slug "${entry.id}" in ${BENCH_DIR}/ — slugs are permanent public ` +
+        `Invalid slug "${entry.id}" in ${NOTES_DIR}/ — slugs are permanent public ` +
           `URLs and must be lowercase kebab-case (a-z, 0-9, -).`,
       );
     }
 
-    const filePath = path.join(ROOT, BENCH_DIR, `${entry.id}.md`);
+    const filePath = path.join(ROOT, NOTES_DIR, `${entry.id}.md`);
     const body = entry.body ?? '';
 
     // Resolve this article's outbound links once, splitting live from dangling.
@@ -111,7 +115,7 @@ async function build(): Promise<Bench> {
   const bySlug = new Map(articles.map((article) => [article.slug, article]));
 
   // Invert the link graph. Backlinks follow the same `updated`-desc order as
-  // everything else, so "Linked from" reads most-recently-honed first.
+  // everything else, so "Linked from" reads most-recently-revised first.
   for (const article of articles) {
     for (const target of article.links) {
       bySlug.get(target)?.backlinks.push(article.slug);
@@ -128,8 +132,8 @@ async function build(): Promise<Bench> {
   return { articles, bySlug, edges, dangling: danglingAll };
 }
 
-/** Resolve slugs to articles, preserving the bench's `updated`-desc order. */
-export function resolve(bench: Bench, slugs: string[]): Article[] {
+/** Resolve slugs to articles, preserving the corpus's `updated`-desc order. */
+export function resolve(corpus: Corpus, slugs: string[]): Article[] {
   const wanted = new Set(slugs);
-  return bench.articles.filter((article) => wanted.has(article.slug));
+  return corpus.articles.filter((article) => wanted.has(article.slug));
 }

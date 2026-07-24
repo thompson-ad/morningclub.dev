@@ -6,11 +6,11 @@
  * raw git history for anyone who wants the receipts.
  */
 import type { APIRoute } from 'astro';
-import { loadBench, type Article } from '../../lib/bench.ts';
+import { loadCorpus, type Article } from '../../lib/corpus.ts';
 import { historyDocument } from '../../lib/agent-surface.ts';
 
 export async function getStaticPaths() {
-  const { articles } = await loadBench();
+  const { articles } = await loadCorpus();
   return articles.map((article) => ({
     params: { slug: article.slug },
     props: { article },

@@ -33,11 +33,11 @@ build time, so freshness signals here are accurate rather than decorative.
 
 ## Writing
 
-Articles are plain CommonMark + GFM in [`bench/`](bench/), one file per article,
+Articles are plain CommonMark + GFM in [`notes/`](notes/), one file per article,
 filename is the slug. Publishing is a push:
 
 ```bash
-git add bench/some-idea.md && git commit -m "another pass" && git push
+git add notes/some-idea.md && git commit -m "another pass" && git push
 ```
 
 See [AUTHORING.md](AUTHORING.md) for the writing guidance, frontmatter schema,
@@ -53,9 +53,15 @@ Built with [Astro](https://astro.build) as a fully static site with zero client
 JavaScript. `npm run build` produces `dist/`; a frontmatter schema violation
 fails the build rather than the site.
 
-- `bench/` — every article, flat
+- `notes/` — every article, flat
 - `images/` — article images, referenced root-relative as `/images/x.png`
-- `src/lib/` — the bench model: git dates, link graph, agent surfaces
+- `src/lib/` — the neutral domain: git dates, link graph, corpus, agent surfaces
+- `src/lib/lexicon.ts` — **the one place the metaphor lives.** Stages are stored
+  neutrally (`exploratory` / `developing` / `established`) and the code speaks of
+  a corpus of notes; the workbench skin — the words *rough / honed / keen*, the
+  date labels, the byline — is applied only at the rendered HTML, from here.
+  Changing the metaphor is an edit to that one file plus, if you like, the stages
+  diagram and any article whose prose is about it.
 - `scripts/subset-fonts.sh` — regenerates the two Literata subsets (outputs are
   committed; the build needs no Python)
 - `scripts/verify.sh` — the acceptance suite, runnable against any base URL

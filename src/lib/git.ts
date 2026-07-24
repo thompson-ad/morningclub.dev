@@ -37,7 +37,7 @@ function assertNotShallow(cwd: string): void {
         'wrong for every article (NFR-5). Check out with `fetch-depth: 0`.';
       // In CI this is a correctness bug in the deploy, not a warning.
       if (process.env.CI) throw new Error(message);
-      console.warn(`[bench] ${message}`);
+      console.warn(`[corpus] ${message}`);
     }
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('Repository is')) {
@@ -69,7 +69,7 @@ export function gitUpdated(absPath: string): Date {
   if (!date || Number.isNaN(date.getTime())) {
     if (process.env.CI) {
       console.warn(
-        `[bench] No commit found for ${path.basename(absPath)} — falling back ` +
+        `[corpus] No commit found for ${path.basename(absPath)} — falling back ` +
           `to mtime. In CI this usually means the file is untracked.`,
       );
     }

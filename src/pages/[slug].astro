@@ -2,21 +2,21 @@
 /**
  * The article page (FR-3).
  *
- * Structure: title, the description set as a standfirst, a meta line in the
- * bench vernacular (first cut / last honed), a hairline, then the text. The
- * apparatus — changelog, then backlinks — closes the page quietly.
- *
- * "First cut" and "last honed" are deliberate copy for humans only; every
- * machine surface keeps `created` and `updated`.
+ * Structure: title, the description set as a standfirst, a meta line whose
+ * labels come from the lexicon (the metaphor lives there, not here), a
+ * hairline, then the text. The apparatus — changelog, then backlinks — closes
+ * the page quietly. Every machine surface keeps the neutral `created` /
+ * `updated`; only these visible labels wear the metaphor.
  */
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import StageChip from '../components/StageChip.astro';
-import { loadBench, type Article } from '../lib/bench.ts';
+import { loadCorpus, type Article } from '../lib/corpus.ts';
+import { LEXICON } from '../lib/lexicon.ts';
 import { SITE, humanDay, isoDay } from '../lib/site.ts';
 
 export async function getStaticPaths() {
-  const { articles } = await loadBench();
+  const { articles } = await loadCorpus();
   return articles.map((article) => ({
     params: { slug: article.slug },
     props: { article },
@@ -30,9 +30,9 @@ interface Props {
 const { article } = Astro.props;
 const { Content } = await render(article.entry);
 
-const bench = await loadBench();
+const corpus = await loadCorpus();
 const backlinks = article.backlinks
-  .map((slug) => bench.bySlug.get(slug))
+  .map((slug) => corpus.bySlug.get(slug))
   .filter((entry): entry is Article => Boolean(entry));
 
 const url = new URL(`/${article.slug}`, SITE.url).href;
@@ -67,8 +67,8 @@ const jsonLd = {
 
     <div class="meta">
       <StageChip stage={article.stage} />
-      <span>First cut <time datetime={isoDay(article.created)}>{humanDay(article.created)}</time></span>
-      <span>Last honed <time datetime={isoDay(article.updated)}>{humanDay(article.updated)}</time></span>
+      <span>{LEXICON.dateLabels.created} <time datetime={isoDay(article.created)}>{humanDay(article.created)}</time></span>
+      <span>{LEXICON.dateLabels.updated} <time datetime={isoDay(article.updated)}>{humanDay(article.updated)}</time></span>
       <a href={`/${article.slug}/history.md`}>History</a>
     </div>
 
@@ -79,7 +79,7 @@ const jsonLd = {
     {
       article.changelog.length > 0 && (
         <section class="apparatus">
-          <h2>What each pass changed</h2>
+          <h2>{LEXICON.revisionsHeading}</h2>
           <ol class="changelog">
             {article.changelog.map((entry) => (
               <li>

@@ -2,7 +2,7 @@
 title: "Make publishing boring so honing stays cheap"
 description: "If publishing costs anything — a review step, a checklist, a deploy you have to babysit — you will unconsciously batch it, and batching is what kills revision."
 created: 2026-07-02
-stage: rough
+stage: exploratory
 tags: [writing, tools, publishing]
 changelog:
   - date: 2026-07-20
@@ -42,7 +42,7 @@ Working backwards from that test removed most of the obvious choices:
 
 ```bash
 # the entire publishing pipeline
-git add bench/some-idea.md && git commit -m "another pass" && git push
+git add notes/some-idea.md && git commit -m "another pass" && git push
 ```
 
 ## Where the cost actually went
