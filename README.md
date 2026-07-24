@@ -63,10 +63,14 @@ fails the build rather than the site.
   diagram and any article whose prose is about it.
 - `scripts/subset-fonts.sh` — regenerates the two Literata subsets (outputs are
   committed; the build needs no Python)
-- `scripts/verify.sh` — the acceptance suite, runnable against any base URL
+- `scripts/verify.sh` — local acceptance suite (build correctness; uses the
+  local-only `example-*` fixtures, run against `npm run preview`)
+- `scripts/healthcheck.sh` — live-domain health check (site, DNS, **email**,
+  redirect, headers) — run against production any time
 
-Deploys to Cloudflare Pages from `main` via GitHub Actions. One-time platform
-setup is documented in [MANUAL-SETUP.md](MANUAL-SETUP.md).
+Deploys to Cloudflare Pages from `main` via GitHub Actions — a push publishes.
+How it's wired, how to publish, and how to run the health checks live in
+[MANUAL-SETUP.md](MANUAL-SETUP.md).
 
 > [!IMPORTANT]
 > This repository is public and its history is permanent — the history surface
