@@ -94,8 +94,7 @@ like this:
 
 ![A workflow diagram — Chat, Plan and Code in a row with a review loop running from Code back through a Rev diamond into Code; below it a crossed-out brain labelled "cognitive surrender, LLM owns engineering" and a curve marked "right shifted."](/images/right-shifted-workflow.png)
 
-*My old workflow: the engineering — my contribution — is right-shifted, all of
-it happening after the LLM has already written the plan and the code.*
+*My old workflow: the engineering is right-shifted, all of it happening after the LLM has already written the plan and the code.*
 
 The agent and I would chat. Once I was convinced it understood my intent, I'd
 switch to plan mode, execute the plan, and review the output.
@@ -121,9 +120,7 @@ and the workflow looks more like this:
 
 ![A workflow diagram — Specs/HLDs and Chat grouped inside a dotted boundary, a dashed arrow leading to Execute, and Execute and Review joined by a two-way arrow; below the boundary a brain labelled "I own engineering, productive struggle."](/images/left-shifted-workflow.png)
 
-*Left-shifted: the contribution moves up front, into the spec, where I own the
-engineering — and because I already know what to expect, the review loop stays
-cheap.*
+*Left-shifted: the contribution moves up front, into the spec, where I own the engineering.*
 
 In left-shifted engineering, the work happens up front, in the spec or
 high-level design doc. Critically, the magic is in the productive struggle of
