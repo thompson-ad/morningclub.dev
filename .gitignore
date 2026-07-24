@@ -13,5 +13,10 @@ node_modules/
 .env.*
 !.env.example
 
+# Example/template articles and their assets — kept locally as references
+# while writing, never tracked or deployed to production.
+notes/example-*.md
+images/stages.svg
+
 # macOS
 .DS_Store

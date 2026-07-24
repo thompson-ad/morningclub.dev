@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Acceptance checks (spec §11). Runs against any base URL:
+# Full acceptance suite (spec §11). Runs against a LOCAL build:
 #
-#   bash scripts/verify.sh https://morningclub.dev     # production
-#   npm run build && npm run preview &                 # or locally
+#   npm run build && npm run preview &     # serves http://localhost:4321
 #   bash scripts/verify.sh http://localhost:4321
 #
-# Exits non-zero if anything fails, so it works as a smoke test in CI too.
+# It expects the local-only `example-*` fixtures (gitignored, never deployed) —
+# they exercise the cross-link and backlink checks a single live article can't.
+# Against production, smoke-test real slugs instead (see MANUAL-SETUP.md § 6).
+# Pass a slug as $2 to target a different article. Exits non-zero on any failure.
 
 set -uo pipefail
 
@@ -81,8 +83,8 @@ check "zero executable scripts on article"  "
 check "images carry width and height"       "body '/$ARTICLE' | grep -o '<img[^>]*' | grep -q 'width='"
 check "images are lazy-loaded"              "body '/$ARTICLE' | grep -o '<img[^>]*' | grep -q 'loading=\"lazy\"'"
 check "images keep unhashed /images/ paths" "body '/$ARTICLE' | grep -q 'src=\"/images/'"
-check "sibling link renders as clean URL"   "body '/$ARTICLE' | grep -q 'href=\"/honing-over-publishing\"'"
-check "backlinks section is present"        "body '/honing-over-publishing' | grep -q 'Linked from'"
+check "sibling link renders as clean URL"   "body '/$ARTICLE' | grep -q 'href=\"/example-honing-over-publishing\"'"
+check "backlinks section is present"        "body '/example-honing-over-publishing' | grep -q 'Linked from'"
 check "dangling link is not a link"         "! body '/$ARTICLE' | grep -q 'writing-for-strangers'"
 check "no trailing-slash canonical"         "! body '/$ARTICLE' | grep -q 'rel=\"canonical\" href=\"[^\"]*/\"'"
 check "font is self-hosted, no CDN"         "! body '/$ARTICLE' | grep -qE 'fonts\.(googleapis|gstatic)\.com'"

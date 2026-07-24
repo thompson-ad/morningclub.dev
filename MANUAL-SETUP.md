@@ -135,17 +135,22 @@ The project exists (step 1) and the secrets are set (step 3), so just run the
 workflow: push to `main`, or GitHub → **Actions** → **Deploy** → **Run
 workflow**.
 
-Then check it landed:
+Then smoke-test that it landed (swap in any real article slug):
 
 ```bash
 curl -sI https://morningclub.dev/ | head -1
-curl -s https://morningclub.dev/llms.txt | head -1
+curl -sI https://morningclub.dev/shifting-left-to-keep-growing.md | grep -i markdown
+curl -s https://morningclub.dev/llms.txt | grep shifting-left
 ```
 
-The full acceptance suite is in [`scripts/verify.sh`](scripts/verify.sh):
+The full 41-check acceptance suite ([`scripts/verify.sh`](scripts/verify.sh))
+runs against a **local** build — it leans on the `example-*` fixtures (kept
+locally, never deployed) to exercise cross-linking and backlinks that a single
+live article can't:
 
 ```bash
-bash scripts/verify.sh https://morningclub.dev
+npm run build && npm run preview &   # serves http://localhost:4321
+bash scripts/verify.sh http://localhost:4321
 ```
 
 ---
