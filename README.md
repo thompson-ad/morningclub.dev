@@ -1,30 +1,29 @@
 # morningclub.dev
 
-A working bench. Ideas arrive rough, get honed against real work, and stay sharp
-only because I keep coming back to them.
+Working notes on software and craft — revised in place and kept at permanent
+URLs, so the current best version always lives at the same address.
 
 **Site:** <https://morningclub.dev>
 
-This is the public bench for [Morning Club](https://github.com/thompson-ad/morning-club) —
+This is the public companion to [Morning Club](https://github.com/thompson-ad/morning-club) —
 a project about staying sharp as an engineer while agents do the typing. Every
-article lives at a permanent URL and carries a *stage* — rough (just off the
-saw), honed (taking an edge, still moving), keen (sharp, and kept that way) —
-plus a record of what each pass changed. Nothing here is finished; that isn't a
-state a blade has.
+article lives at a permanent URL and carries a *stage* — exploratory, developing
+or established — saying how much weight to give it today, plus a record of what
+each revision changed. Nothing here is finished; revising in place is the point.
 
 ## For agents and LLMs
 
 Start at **<https://morningclub.dev/llms.txt>**. It indexes every article as raw
-markdown with its stage and last-honed date.
+markdown with its stage and last-revised date.
 
 | Surface | What it is |
 |---|---|
 | `/llms.txt` | Index of every article, linking to raw markdown |
-| `/llms-full.txt` | The entire bench in one fetch |
+| `/llms-full.txt` | The entire corpus in one fetch |
 | `/<slug>.md` | One article's actual source, frontmatter included |
-| `/<slug>/history.md` | What each pass at that article changed, with links into git history |
+| `/<slug>/history.md` | What each revision of that article changed, with links into git history |
 | `/graph.json` | The link graph between articles (nodes and edges) |
-| `/rss.xml` | Full-content feed, ordered by last honed |
+| `/rss.xml` | Full-content feed, ordered by last revised |
 
 Crawling and training are explicitly welcome — see [robots.txt](public/robots.txt).
 
@@ -58,8 +57,8 @@ fails the build rather than the site.
 - `src/lib/` — the neutral domain: git dates, link graph, corpus, agent surfaces
 - `src/lib/lexicon.ts` — **the one place the metaphor lives.** Stages are stored
   neutrally (`exploratory` / `developing` / `established`) and the code speaks of
-  a corpus of notes; the workbench skin — the words *rough / honed / keen*, the
-  date labels, the byline — is applied only at the rendered HTML, from here.
+  a corpus of notes; the presentation skin — the stage display labels, the date
+  labels, the byline — is applied only at the rendered HTML, from here.
   Changing the metaphor is an edit to that one file plus, if you like, the stages
   diagram and any article whose prose is about it.
 - `scripts/subset-fonts.sh` — regenerates the two Literata subsets (outputs are

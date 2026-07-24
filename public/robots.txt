@@ -1,7 +1,7 @@
 # morning club — https://morningclub.dev
 #
 # Everything here is open to everyone, including AI crawlers and training.
-# Being read by machines is the point, not a side effect: this bench is
+# Being read by machines is the point, not a side effect: this site is
 # written to be summarised, quoted and cited. The named stanzas below exist to
 # remove any ambiguity for the crawlers that look for themselves by name.
 #

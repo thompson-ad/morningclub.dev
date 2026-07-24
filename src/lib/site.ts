@@ -2,8 +2,8 @@
  * The neutral domain — everything more than one surface must agree on.
  *
  * Nothing here knows the site's metaphor. Stage values are epistemic states,
- * notes live in a directory, and the collection is a corpus. The metaphor (the
- * workbench) is applied only at the rendered-HTML layer, from [[lexicon]].
+ * notes live in a directory, and the collection is a corpus. The metaphor is
+ * applied only at the rendered-HTML layer, from [[lexicon]].
  */
 
 import path from 'node:path';
@@ -44,8 +44,8 @@ export const SITE = {
  * These three values are the permanent frontmatter contract (spec §9.4): they
  * are stored in every article, exposed byte-faithfully to agents, and keyed by
  * the stage-mark CSS. They are deliberately metaphor-free so the surface skin
- * can change without touching a single article. The reader-facing words —
- * rough / honed / keen today — are the lexicon's job, not this file's.
+ * can change without touching a single article. The reader-facing words are the
+ * lexicon's job, not this file's.
  *
  * Ordered low → high confidence; the stage mark's fill follows that order.
  */

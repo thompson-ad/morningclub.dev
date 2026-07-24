@@ -1,6 +1,6 @@
 # Authoring
 
-How to write on this bench, and why the conventions are what they are.
+How to write here, and why the conventions are what they are.
 
 ## The shape of an article
 
@@ -37,8 +37,8 @@ changelog:
 |---|---|---|
 | `title` | yes | |
 | `description` | yes | ≤ 200 characters. It's the standfirst, the meta description, and the llms.txt line — write it as a real sentence. |
-| `created` | yes | The date the idea first hit the bench. |
-| `stage` | yes | `exploratory` \| `developing` \| `established` (renders as rough / honed / keen) |
+| `created` | yes | The date the idea was first written. |
+| `stage` | yes | `exploratory` \| `developing` \| `established` (see Stages below) |
 | `tags` | no | lowercase kebab-case |
 | `changelog` | no | See below. |
 
@@ -51,19 +51,18 @@ file and the field; it can't reach the live site.
 
 ### Stages
 
-You type the neutral value on the left; the site renders the label on the right.
+You store one of three values. Each is an epistemic claim — how much weight a
+reader should give the piece today, not a measure of effort spent:
 
-- **`exploratory`** → *rough* — just off the saw. Thinking out loud, might be wrong.
-- **`developing`** → *honed* — taking an edge. A real position, argued, but still moving.
-- **`established`** → *keen* — sharp, and kept that way. You'd defend it.
+- **`exploratory`** — thinking out loud, might be wrong.
+- **`developing`** — a real position, argued, but still moving.
+- **`established`** — settled; you'd defend it.
 
-A stage is a claim about how much weight a reader should put on the piece today,
-not a measure of effort spent. Plenty of ideas deserve to sit at `exploratory`
-forever. Don't add new stages — the three values are the permanent frontmatter
-contract (they appear byte-for-byte in every `.md` sibling, llms.txt and the
-graph). The *words* rough / honed / keen are only a skin: they live in
-`src/lib/lexicon.ts` and can change without touching a single article. So write
-the neutral value and never the label.
+Plenty of ideas deserve to sit at `exploratory` forever. Don't add new stages —
+these three are the permanent frontmatter contract (they appear byte-for-byte in
+every `.md` sibling, llms.txt and the graph). The site renders each with a
+display label defined in `src/lib/lexicon.ts`; write the neutral value, never the
+label.
 
 ### The changelog
 
@@ -148,7 +147,7 @@ Evidence-backed practices for work that gets found and cited:
 - **Phrase headings as the questions people actually ask.**
 - **Come back to things.** Another pass is distribution, not housekeeping —
   recently updated content earns several times more AI citations than stale
-  content. Re-honing an old article is often worth more than writing a new one.
+  content. Revising an old article is often worth more than writing a new one.
 - **One idea per article.** Link between articles rather than nesting ideas
   inside one.
 
@@ -160,7 +159,7 @@ git add notes/some-idea.md && git commit -m "another pass" && git push
 
 CI builds and deploys. There is no draft state, no review step, and no preview
 environment — everything is public from the moment it exists, and the stage field
-carries the "how sharp is this" signal instead.
+carries the "how settled is this" signal instead.
 
 Local preview:
 
