@@ -1,6 +1,6 @@
 ---
 title: "Shifting left to keep growing"
-description: "For years my growth model was just 'code more.' AI broke it. Shifting my contribution left — owning the spec before the LLM does — is how I'm trying to keep growing while still shipping."
+description: "My AI growth arc as an early senior engineer"
 created: 2026-07-24
 stage: developing
 tags: [ai, growth, spec-driven-development, agentic-coding]
