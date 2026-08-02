@@ -33,35 +33,32 @@ export const LEXICON = {
    * these words, so it survives a metaphor change untouched.
    */
   stages: {
-    exploratory: { label: 'rough', gloss: 'just off the saw' },
-    developing: { label: 'honed', gloss: 'taking an edge' },
-    established: { label: 'keen', gloss: 'sharp, and kept sharp' },
+    exploratory: { label: 'idea', gloss: 'exploring the idea' },
+    developing: { label: 'draft', gloss: 'developing and thinking' },
+    established: { label: 'developed', gloss: 'finished thinking' },
   } satisfies Record<Stage, StageLabel>,
 
   /** The two date labels on the article meta line (domain: created / updated). */
   dateLabels: {
-    created: 'First cut',
-    updated: 'Last honed',
+    created: 'First draft',
+    updated: 'Last updated',
   },
 
   /** The masthead subtitle, rendered as `{byline} {author}`. */
-  byline: 'a working bench by',
+  byline: 'by',
 
   /** The changelog section heading on an article (domain: revisions). */
   revisionsHeading: 'What each pass changed',
 
   /** The 404 headline. */
-  notFoundTitle: 'Nothing on the bench here',
+  notFoundTitle: 'Nothing here',
 
   /** The colophon line in the footer. */
-  colophon: 'Working notes — nothing here is finished.',
+  colophon: 'morning club',
 
   /** The index lede — the one paragraph of metaphor prose on the front page. */
   lede:
-    'Ideas on the bench. They arrive rough, get honed against real work, and ' +
-    'the sharp ones stay sharp only because I keep coming back to them. Each ' +
-    'carries a stage saying how much weight to put on it today, and a record ' +
-    'of what every pass changed.',
+    'My thoughts, interests and ideas. Everything is a work in progress.',
 } as const;
 
 /** The visible label for a stored stage value. */
