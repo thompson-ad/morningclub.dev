@@ -30,6 +30,12 @@ export const SITE = {
    */
   tagline: 'Working notes by Aaron Thompson, revised in place and never finished.',
   author: 'Aaron Thompson',
+  /**
+   * Where the author's name points. Every visible mention of the name links
+   * here (via [[AuthorLink]]), and the JSON-LD Person nodes claim it as a
+   * `sameAs` profile so machines join the two identities up.
+   */
+  authorUrl: 'https://www.linkedin.com/in/aaron-daniel-thompson/',
   repo: {
     owner: 'thompson-ad',
     name: 'morningclub.dev',

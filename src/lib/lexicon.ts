@@ -58,7 +58,7 @@ export const LEXICON = {
 
   /** The index lede — the one paragraph of metaphor prose on the front page. */
   lede:
-    'My thoughts, interests and ideas. Everything is a work in progress.',
+    'The things I\'m learning, my interests and ideas. Everything is a work in progress.',
 } as const;
 
 /** The visible label for a stored stage value. */

@@ -500,6 +500,13 @@ p:has(> img:only-child) + p:has(> em:only-child) em {
   text-decoration: none;
 }
 
+/* The byline's name leaves the site, so it keeps the usual link underline —
+   only the sitename, which just goes home, is left bare. */
+.masthead .caption a {
+  text-decoration: underline;
+  text-decoration-color: var(--muted);
+}
+
 .masthead a:hover {
   text-decoration: underline;
   text-decoration-color: var(--ink);

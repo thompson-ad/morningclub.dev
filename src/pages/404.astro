@@ -1,7 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
+import AuthorLink from '../components/AuthorLink.astro';
 import { SITE } from '../lib/site.ts';
 import { LEXICON } from '../lib/lexicon.ts';
+
+/**
+ * The tagline is a data string — it stays plain in meta tags, the feed and
+ * llms.txt — so the link is applied here, around the name it already contains.
+ */
+const [beforeAuthor, afterAuthor] = SITE.tagline.split(SITE.author);
 ---
 
 <Base
@@ -19,5 +26,5 @@ import { LEXICON } from '../lib/lexicon.ts';
     Try <a href="/">the index</a> — it lists everything here, most recently
     revised first. Agents can start at <a href="/llms.txt">llms.txt</a>.
   </p>
-  <p class="caption">{SITE.tagline}</p>
+  <p class="caption">{beforeAuthor}<AuthorLink />{afterAuthor}</p>
 </Base>

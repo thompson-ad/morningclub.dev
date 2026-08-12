@@ -1,0 +1,12 @@
+---
+/**
+ * The author's name, linked to their profile.
+ *
+ * One component so every visible mention of the name carries the same href and
+ * the same new-tab behaviour. Data surfaces (meta tags, JSON-LD, the feed,
+ * llms.txt) keep the bare `SITE.author` string — this is the HTML layer only.
+ */
+import { SITE } from '../lib/site.ts';
+---
+
+<a href={SITE.authorUrl} target="_blank" rel="noopener noreferrer">{SITE.author}</a>

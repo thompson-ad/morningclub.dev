@@ -79,6 +79,7 @@ How it's wired, how to publish, and how to run the health checks live in
 
 ## Licence
 
-Prose is © Aaron Thompson, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) —
+Prose is © [Aaron Thompson](https://www.linkedin.com/in/aaron-daniel-thompson/),
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) —
 quote and cite freely, attribution appreciated. Site code is MIT.
 Literata is licensed under the [SIL Open Font License 1.1](https://openfontlicense.org/).

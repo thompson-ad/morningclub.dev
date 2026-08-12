@@ -6,6 +6,7 @@
  * JSON-LD data block, which does not execute.
  */
 import { Font } from 'astro:assets';
+import AuthorLink from '../components/AuthorLink.astro';
 import { SITE } from '../lib/site.ts';
 import { LEXICON } from '../lib/lexicon.ts';
 import '../styles/main.css';
@@ -69,7 +70,7 @@ const pageTitle = path === '/' ? title : `${title} — ${SITE.name}`;
     <div class="shell">
       <header class="masthead">
         <a class="sitename" href="/">{SITE.name}</a>
-        <span class="caption">{LEXICON.byline} {SITE.author}</span>
+        <span class="caption">{LEXICON.byline} <AuthorLink /></span>
       </header>
 
       <main id="content">

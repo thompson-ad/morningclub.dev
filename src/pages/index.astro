@@ -21,7 +21,7 @@ const jsonLd = {
     name: SITE.name,
     description: SITE.tagline,
     url: SITE.url,
-    author: { "@type": "Person", name: SITE.author },
+    author: { "@type": "Person", name: SITE.author, sameAs: [SITE.authorUrl] },
     hasPart: articles.map((article) => ({
         "@type": "Article",
         headline: article.title,
