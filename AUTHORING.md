@@ -26,12 +26,11 @@ description: "One-sentence summary used in indexes, meta tags and llms.txt."
 created: 2026-07-22
 stage: exploratory
 tags: [learning, practice]
-changelog:
-  - date: 2026-08-10
-    note: "Reversed the core claim after testing against three months of review data."
-    stage: developing
 ---
 ```
+
+That's the whole contract. It's the same on the day you cut the file and on the
+twentieth pass over it — there is nothing to add when you come back.
 
 | Field | Required | Notes |
 |---|---|---|
@@ -40,14 +39,14 @@ changelog:
 | `created` | yes | The date the idea was first written. |
 | `stage` | yes | `exploratory` \| `developing` \| `established` (see Stages below) |
 | `tags` | no | lowercase kebab-case |
-| `changelog` | no | See below. |
 
 There is **no `updated` field** — it's derived from the last git commit that
 touched the file. A date you can forget to update is a date nobody should trust,
 so it isn't yours to write.
 
-The schema is enforced at build time. A typo fails `npm run build` naming the
-file and the field; it can't reach the live site.
+The schema is enforced at build time, and it's strict: a typo, or a key that
+isn't in the table above, fails `npm run build` naming the file and the key. It
+can't reach the live site.
 
 ### Stages
 
@@ -64,31 +63,16 @@ every `.md` sibling, llms.txt and the graph). The site renders each with a
 display label defined in `src/lib/lexicon.ts`; write the neutral value, never the
 label.
 
-### The changelog
+### History
 
-This is the layer of record, and arguably the most valuable thing on the site:
-anyone can tell you what they think, few can show you what they used to think and
-what moved them.
+There's nothing to write. The record of how an article changed is its commit
+log, and every article publishes a `<slug>/history.md` alongside its source
+pointing an agent at it — the full log, plus how to fetch any version that has
+ever existed. Both are automatic.
 
-Record changes **in the thinking**, not in the prose:
-
-```yaml
-changelog:
-  # good — says what changed and why
-  - date: 2026-08-10
-    note: "Reversed the core claim. Three months of review data showed the effect I attributed to spacing was mostly retrieval difficulty."
-    stage: developing
-
-  # noise — don't
-  - date: 2026-08-11
-    note: "Fixed typos, tightened intro."
-```
-
-Add a `stage:` key only when that pass changed the stage. Together with the
-current `stage`, those entries reconstruct the whole timeline.
-
-Commit hygiene is *not* required. Messy commits are fine — the changelog is the
-signal, and raw git history is just the drill-down beneath it.
+That puts the weight on commit messages, which are now the only prose about what
+a pass changed. Say what changed in the *thinking* where there's something to
+say; nobody is checking, and a bare "another pass" is fine when there isn't.
 
 ## Cross-linking
 

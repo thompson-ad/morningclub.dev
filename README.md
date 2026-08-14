@@ -8,8 +8,8 @@ URLs, so the current best version always lives at the same address.
 This is the public companion to [Morning Club](https://github.com/thompson-ad/morning-club) —
 a project about staying sharp as an engineer while agents do the typing. Every
 article lives at a permanent URL and carries a *stage* — exploratory, developing
-or established — saying how much weight to give it today, plus a record of what
-each revision changed. Nothing here is finished; revising in place is the point.
+or established — saying how much weight to give it today. Nothing here is
+finished; revising in place is the point.
 
 ## For agents and LLMs
 
@@ -21,7 +21,7 @@ markdown with its stage and last-revised date.
 | `/llms.txt` | Index of every article, linking to raw markdown |
 | `/llms-full.txt` | The entire corpus in one fetch |
 | `/<slug>.md` | One article's actual source, frontmatter included |
-| `/<slug>/history.md` | What each revision of that article changed, with links into git history |
+| `/<slug>/history.md` | Where that article's revisions live: its commit log, and how to fetch any past version |
 | `/graph.json` | The link graph between articles (nodes and edges) |
 | `/rss.xml` | Full-content feed, ordered by last revised |
 

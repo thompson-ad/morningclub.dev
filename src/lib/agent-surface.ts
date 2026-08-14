@@ -49,22 +49,15 @@ export function rawSibling(article: Article): string {
 }
 
 /**
- * One article's evolution, as a document an agent can read in a single fetch.
+ * Where to find one article's evolution, as a document an agent can read in a
+ * single fetch.
  *
- * The curated changelog is the layer of record; raw git history is the
- * drill-down beneath it. Commit hygiene is explicitly not required — messy
- * commits are fine, because the changelog carries the signal.
+ * Git is the record — there is no hand-written layer above it, because a record
+ * you can forget to keep is one nobody should trust. So this document asserts
+ * only what the repository already knows, and spends itself telling an agent how
+ * to walk the commits.
  */
 export function historyDocument(article: Article): string {
-  const events = article.changelog.map((entry) => {
-    const transition = entry.stage ? ` **${entry.stage} from here** — ` : ' ';
-    return `- **${isoDay(entry.date)}** —${transition}${entry.note}`;
-  });
-
-  // The first pass closes the list; we assert only what we know, so no stage is
-  // claimed for it unless a changelog entry recorded one.
-  events.push(`- **${isoDay(article.created)}** — first written.`);
-
   const lines = [
     '---',
     `title: ${yamlString(`History — ${article.title}`)}`,
@@ -77,14 +70,11 @@ export function historyDocument(article: Article): string {
     '',
     `# History — ${article.title}`,
     '',
-    '> What each revision of this article changed, and why. The curated notes below',
-    '> are the record; the raw git history linked at the bottom is the drill-down.',
-    '> Entries are newest first, and record changes in the thinking rather than in',
-    '> the prose.',
+    '> Every revision of this article is a commit. This document points at them:',
+    '> the full log, and how to fetch any version that has ever existed.',
     '',
-    '## Revisions',
-    '',
-    ...events,
+    `- First written: ${isoDay(article.created)}`,
+    `- Last revised: ${isoDay(article.updated)}`,
     '',
     '## Raw history',
     '',
@@ -124,10 +114,10 @@ export function llmsIndex(corpus: Corpus): string {
     `> ${SITE.tagline} Every note is kept at a permanent URL and revised in place,`,
     '> rather than superseded by a newer post. Each carries a stage — exploratory,',
     '> developing, or established — saying how much weight to put on it today, and a',
-    '> companion document at `<slug>/history.md` recording what each revision changed',
-    '> and why. `updated` dates come from the last commit that touched the file, so',
-    '> they are accurate rather than aspirational. The links below point at raw',
-    '> markdown.',
+    '> companion document at `<slug>/history.md` pointing into the full commit',
+    '> history behind it. `updated` dates come from the last commit that touched the',
+    '> file, so they are accurate rather than aspirational. The links below point at',
+    '> raw markdown.',
     '',
     '## Articles',
     '',

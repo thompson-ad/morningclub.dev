@@ -18,12 +18,6 @@ import { NOTES_DIR, ROOT, type Stage } from './site.ts';
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-export interface ChangelogEntry {
-  date: Date;
-  note: string;
-  stage?: Stage;
-}
-
 export interface Article {
   slug: string;
   title: string;
@@ -34,8 +28,6 @@ export interface Article {
   updated: Date;
   stage: Stage;
   tags: string[];
-  /** Newest first. */
-  changelog: ChangelogEntry[];
   /** The raw markdown source, exactly as authored. */
   body: string;
   /** Absolute path to the source file. */
@@ -98,9 +90,6 @@ async function build(): Promise<Corpus> {
       updated: gitUpdated(filePath),
       stage: entry.data.stage,
       tags: entry.data.tags,
-      changelog: [...entry.data.changelog].sort(
-        (a, b) => b.date.getTime() - a.date.getTime(),
-      ),
       body,
       filePath,
       links: [...links].sort(),

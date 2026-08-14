@@ -47,9 +47,6 @@ export const LEXICON = {
   /** The masthead subtitle, rendered as `{byline} {author}`. */
   byline: 'by',
 
-  /** The changelog section heading on an article (domain: revisions). */
-  revisionsHeading: 'What each pass changed',
-
   /** The 404 headline. */
   notFoundTitle: 'Nothing here',
 

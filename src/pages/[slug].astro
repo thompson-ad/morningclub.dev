@@ -4,9 +4,9 @@
  *
  * Structure: title, the description set as a standfirst, a meta line whose
  * labels come from the lexicon (the metaphor lives there, not here), a
- * hairline, then the text. The apparatus — changelog, then backlinks — closes
- * the page quietly. Every machine surface keeps the neutral `created` /
- * `updated`; only these visible labels wear the metaphor.
+ * hairline, then the text. The apparatus — the backlinks — closes the page
+ * quietly. Every machine surface keeps the neutral `created` / `updated`; only
+ * these visible labels wear the metaphor.
  */
 import { render } from 'astro:content';
 import Base from '../layouts/Base.astro';
@@ -75,25 +75,6 @@ const jsonLd = {
     <hr class="rule" />
 
     <Content />
-
-    {
-      article.changelog.length > 0 && (
-        <section class="apparatus">
-          <h2>{LEXICON.revisionsHeading}</h2>
-          <ol class="changelog">
-            {article.changelog.map((entry) => (
-              <li>
-                <div>
-                  <time datetime={isoDay(entry.date)}>{humanDay(entry.date)}</time>
-                  {entry.stage && <StageChip stage={entry.stage} />}
-                </div>
-                <p>{entry.note}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )
-    }
 
     {
       backlinks.length > 0 && (

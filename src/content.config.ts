@@ -17,19 +17,16 @@ import { STAGES } from './lib/site.ts';
 
 const stage = z.enum(STAGES);
 
-const changelogEntry = z.object({
-  date: z.date(),
-  note: z.string().min(1),
-  /** Present only when this revision moved the article to a new stage. */
-  stage: stage.optional(),
-});
-
 export const collections = {
   notes: defineCollection({
     // `base` resolves from the project root, so this reaches notes/ at the
     // repo root rather than anything under src/.
     loader: glob({ pattern: '*.md', base: './notes' }),
-    schema: z.object({
+    // Strict: an unrecognised key fails the build naming the file and the key.
+    // Zod would otherwise strip it silently — but the `.md` sibling ships the
+    // authored frontmatter verbatim (NFR-7), so a stripped key would still
+    // reach agents while rendering nowhere. Better to be loud than to lie.
+    schema: z.strictObject({
       title: z.string().min(1),
       description: z
         .string()
@@ -45,8 +42,6 @@ export const collections = {
             .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'tags must be lowercase kebab-case'),
         )
         .default([]),
-      /** The curated record of what each revision changed — the layer of record above raw git history. */
-      changelog: z.array(changelogEntry).default([]),
     }),
   }),
 };

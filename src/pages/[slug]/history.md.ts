@@ -2,8 +2,8 @@
  * Per-article evolution at `/<slug>/history.md` (FR-5).
  *
  * The capability this exists for: an agent being able to answer "how has Aaron's
- * thinking on this changed?" — from a curated record, with a pointer down into
- * raw git history for anyone who wants the receipts.
+ * thinking on this changed?" — by walking the commits behind the file, which
+ * this document hands it the addresses for.
  */
 import type { APIRoute } from 'astro';
 import { loadCorpus, type Article } from '../../lib/corpus.ts';
