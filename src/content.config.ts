@@ -42,6 +42,22 @@ export const collections = {
             .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'tags must be lowercase kebab-case'),
         )
         .default([]),
+      /**
+       * Brain citations that seeded this essay, when it began as a Morning Club
+       * essay question (`morning-club` repo, `essays/`). Carried so the routine
+       * can see which questions became essays; rendered nowhere, but the `.md`
+       * sibling ships it verbatim (NFR-7), which is the surface that matters.
+       */
+      seeds: z
+        .array(
+          z
+            .string()
+            .regex(
+              /^[a-z0-9-]+\.md#[a-z0-9-]+$/,
+              'seeds must be brain citations of the form file.md#key',
+            ),
+        )
+        .default([]),
     }),
   }),
 };

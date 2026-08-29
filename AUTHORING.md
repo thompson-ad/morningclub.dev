@@ -39,6 +39,7 @@ twentieth pass over it — there is nothing to add when you come back.
 | `created` | yes | The date the idea was first written. |
 | `stage` | yes | `exploratory` \| `developing` \| `established` (see Stages below) |
 | `tags` | no | lowercase kebab-case |
+| `seeds` | no | Brain citations (`file.md#key`) when the essay began as a Morning Club question — see below. |
 
 There is **no `updated` field** — it's derived from the last git commit that
 touched the file. A date you can forget to update is a date nobody should trust,
@@ -73,6 +74,23 @@ ever existed. Both are automatic.
 That puts the weight on commit messages, which are now the only prose about what
 a pass changed. Say what changed in the *thinking* where there's something to
 say; nobody is checking, and a bare "another pass" is fine when there isn't.
+
+## Essays seeded by Morning Club
+
+Some essays start from a monthly question delivered by the Morning Club essays
+routine (`morning-club` repo, `essays/`). The email names an entry-point unit
+under the question and a handful of trailheads; those citations are the seeds.
+When drafting or publishing one:
+
+- carry the citations in frontmatter — `seeds: ["human-centered-code.md#connascence"]`
+- append a completion line to `~/code/morning-club/essays/log.md`:
+  `YYYY-MM-DD | written | hub:<file.md#key> | <note slug>`
+
+The question is usually the title, and the slug follows from it. Neither field is
+rendered — the `seeds` array exists so the routine can see which questions became
+essays, and which shapes have stopped earning their place. The `written` line is
+appended by hand from a local session, because the routine's cloud environment
+only ever has the `morning-club` repo.
 
 ## Cross-linking
 
