@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "engineering-in-the-margins.md",
+                "file": "how-apps-and-agents-connect-to-other-apps.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "engineering-in-the-margins"
+              "title": "how-apps-and-agents-connect-to-other-apps"
             }
           }
         ]
@@ -83,8 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "dca2facc41340820",
@@ -190,5 +189,11 @@
     }
   },
   "active": "e3cf2e5d12270e98",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "how-apps-and-agents-connect-to-other-apps.md",
+    "the-provider-effect.md",
+    "engineering-in-the-margins.md",
+    "example-honing-over-publishing.md",
+    "example-article.md"
+  ]
 }
